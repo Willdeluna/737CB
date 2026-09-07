@@ -6,13 +6,30 @@
 <title>B737NG Circuit Breaker Finder</title>
 <style>
   * { box-sizing: border-box; }
+  :root{
+    --bg:#000; --panel:#0b0b0b; --input:#111;
+    --accent:orange; --accent-soft:#ffb84d;
+    --text:#ffe4b3; --text-dim:#ffd27f;
+    --head-bg:#1a1100; --active-bg:#2a1a00; --hover-bg:#1a1100; --hover-btn:#1a1a1a;
+    --border:orange; --border-soft:rgba(255,165,0,0.35); --border-faint:rgba(255,165,0,0.18);
+    --overlay:rgba(0,0,0,0.95);
+  }
+  body.light{
+    --bg:#eaeef3; --panel:#ffffff; --input:#ffffff;
+    --accent:#c2410c; --accent-soft:#9a5b1e;
+    --text:#22303f; --text-dim:#6b4a34;
+    --head-bg:#fbe9d7; --active-bg:#ffd9b0; --hover-bg:#f2ebe2; --hover-btn:#eef0f3;
+    --border:#e2a468; --border-soft:rgba(194,65,12,0.30); --border-faint:rgba(194,65,12,0.16);
+    --overlay:rgba(25,25,30,0.55);
+  }
   body {
     margin: 0; padding: 16px;
     font-family: Arial, sans-serif;
-    background: #000; color: orange;
+    background: var(--bg); color: var(--accent);
+    transition: background .25s ease, color .25s ease;
   }
   h1 { margin: 0 0 12px; text-align: center; font-size: 1.5rem; letter-spacing: 2px; }
-  .subhead { text-align: center; color: #ffb84d; font-style: italic; margin-bottom: 18px; font-size: 0.95rem; }
+  .subhead { text-align: center; color: var(--accent-soft); font-style: italic; margin-bottom: 18px; font-size: 0.95rem; }
 
   .controls {
     display: flex; flex-wrap: wrap; gap: 10px;
@@ -22,20 +39,20 @@
   #searchBox {
     flex: 1 1 360px; max-width: 600px;
     padding: 12px; font-size: 1rem;
-    background: #111; color: orange;
-    border: 1px solid orange; border-radius: 8px;
+    background: var(--input); color: var(--accent);
+    border: 1px solid var(--border); border-radius: 8px;
   }
-  #searchBox::placeholder { color: #ffb84d; opacity: 0.7; }
-  #panelFilter, #clearBtn {
+  #searchBox::placeholder { color: var(--accent-soft); opacity: 0.7; }
+  #panelFilter, #clearBtn, #themeToggle {
     padding: 10px 14px; font-size: 0.95rem;
-    background: #111; color: orange;
-    border: 1px solid orange; border-radius: 8px;
+    background: var(--input); color: var(--accent);
+    border: 1px solid var(--border); border-radius: 8px;
     cursor: pointer;
   }
-  #clearBtn:hover, #panelFilter:hover { background: #1a1a1a; }
+  #clearBtn:hover, #panelFilter:hover, #themeToggle:hover { background: var(--hover-btn); }
 
   #countLabel {
-    color: #ffd27f; text-align: center;
+    color: var(--text-dim); text-align: center;
     margin-bottom: 12px; font-size: 0.9rem;
   }
 
@@ -49,51 +66,51 @@
   }
 
   .panel-section {
-    border: 1px solid orange;
+    border: 1px solid var(--border);
     border-radius: 10px;
-    background: #0b0b0b;
+    background: var(--panel);
     padding: 14px;
   }
   .panel-section h2 {
     margin: 0 0 12px;
     font-size: 1.1rem;
     letter-spacing: 1.5px;
-    color: orange;
+    color: var(--accent);
     display: flex; justify-content: space-between; align-items: center;
   }
   .enlarge-btn {
     font-size: 0.85rem;
-    background: #1a1100; color: orange;
-    border: 1px solid orange; border-radius: 5px;
+    background: var(--head-bg); color: var(--accent);
+    border: 1px solid var(--border); border-radius: 5px;
     padding: 5px 10px; cursor: pointer;
     font-weight: normal; letter-spacing: 0;
   }
-  .enlarge-btn:hover { background: #2a1a00; }
+  .enlarge-btn:hover { background: var(--active-bg); }
 
   table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
   thead th {
     text-align: left; padding: 8px 6px;
-    background: #1a1100; color: orange;
-    border-bottom: 1px solid orange;
+    background: var(--head-bg); color: var(--accent);
+    border-bottom: 1px solid var(--border);
     position: sticky; top: 0; z-index: 1;
   }
   tbody td {
     padding: 6px;
-    border-bottom: 1px solid rgba(255,165,0,0.18);
-    color: #ffe4b3;
+    border-bottom: 1px solid var(--border-faint);
+    color: var(--text);
     vertical-align: top;
   }
   tbody tr { cursor: pointer; }
-  tbody tr:hover { background: #1a1100; }
-  tbody tr.active { background: #2a1a00; }
+  tbody tr:hover { background: var(--hover-bg); }
+  tbody tr.active { background: var(--active-bg); }
 
   .panel-tag {
     display: inline-block;
     padding: 2px 6px;
-    background: #2a1a00;
-    border: 1px solid orange;
+    background: var(--active-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
-    color: orange;
+    color: var(--accent);
     font-weight: bold;
     font-size: 0.78rem;
     white-space: nowrap;
@@ -101,36 +118,36 @@
   .pos-tag {
     display: inline-block;
     padding: 2px 6px;
-    background: #0b0b0b;
-    border: 1px solid #ffb84d;
+    background: var(--panel);
+    border: 1px solid var(--accent-soft);
     border-radius: 4px;
-    color: #ffd27f;
+    color: var(--text-dim);
     font-weight: bold;
     font-size: 0.78rem;
     white-space: nowrap;
   }
   .cb-num {
-    color: #ffd27f;
+    color: var(--text-dim);
     font-family: 'Courier New', monospace;
     font-size: 0.82rem;
   }
-  .cb-name { color: #ffe4b3; }
+  .cb-name { color: var(--text); }
   .dal-tag {
-    color: #ffb84d;
+    color: var(--accent-soft);
     font-size: 0.72rem;
     font-style: italic;
   }
   .no-results, .no-diagram {
     text-align: center; padding: 30px;
-    color: #ffb84d;
+    color: var(--accent-soft);
   }
   .no-diagram {
     font-style: italic;
-    border: 1px dashed rgba(255,165,0,0.4);
+    border: 1px dashed var(--border-soft);
     border-radius: 8px;
   }
 
-  .panel-display { cursor: zoom-in; }
+  .panel-display { cursor: zoom-in; background:#0b0b0b; border-radius:8px; padding:4px; }   /* keep the diagram on a dark backing in both themes so its markings stay visible */
   .panel-display svg { width: 100%; height: auto; display: block; }
 
   /* HIGHLIGHT: red ring with pulse animation */
@@ -170,7 +187,7 @@
   .table-wrap {
     max-height: 75vh;
     overflow-y: auto;
-    border: 1px solid rgba(255,165,0,0.35);
+    border: 1px solid var(--border-soft);
     border-radius: 6px;
   }
 
@@ -180,19 +197,19 @@
   }
   .tab {
     padding: 6px 10px;
-    background: #111; color: orange;
-    border: 1px solid orange; border-radius: 5px;
+    background: var(--input); color: var(--accent);
+    border: 1px solid var(--border); border-radius: 5px;
     cursor: pointer; font-size: 0.85rem;
     font-weight: bold;
   }
-  .tab.active { background: #2a1a00; }
-  .tab:hover { background: #1a1100; }
+  .tab.active { background: var(--active-bg); }
+  .tab:hover { background: var(--hover-bg); }
 
   /* Modal for enlarged view */
   #modal {
     display: none;
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.95);
+    background: var(--overlay);
     z-index: 1000;
     flex-direction: column;
     padding: 16px;
@@ -200,7 +217,7 @@
   #modal.open { display: flex; }
   .modal-header {
     display: flex; justify-content: space-between; align-items: center;
-    color: orange;
+    color: var(--accent);
     margin-bottom: 10px;
     flex-wrap: wrap; gap: 10px;
   }
@@ -210,15 +227,15 @@
   .modal-controls { display: flex; gap: 6px; flex-wrap: wrap; }
   .modal-btn {
     padding: 6px 12px;
-    background: #1a1100; color: orange;
-    border: 1px solid orange; border-radius: 5px;
+    background: var(--head-bg); color: var(--accent);
+    border: 1px solid var(--border); border-radius: 5px;
     cursor: pointer; font-size: 0.85rem; font-weight: bold;
   }
-  .modal-btn:hover { background: #2a1a00; }
+  .modal-btn:hover { background: var(--active-bg); }
   #modalContent {
     flex: 1;
     overflow: auto;
-    border: 1px solid orange; border-radius: 8px;
+    border: 1px solid var(--border); border-radius: 8px;
     background: #0b0b0b;
     display: flex; align-items: flex-start; justify-content: center;
     padding: 10px;
@@ -231,15 +248,48 @@
     transition: width 0.15s ease;
   }
   .modal-hint {
-    color: #ffb84d;
+    color: var(--accent-soft);
     font-size: 0.8rem;
     font-style: italic;
     text-align: center;
     margin-top: 6px;
   }
+  #cbTimers { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }   /* in normal flow at top-left → never overlaps the title; wraps on small screens */
+  .cbTimer {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 8px 6px 12px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--input); color: var(--accent);
+    user-select: none; -webkit-user-select: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+  }
+  .cbTimer .cbTime { font: 800 22px/1 'Courier New', monospace; letter-spacing: 1px; min-width: 54px; text-align: center; }
+  .cbBtn {
+    cursor: pointer; border: 1px solid var(--border); background: transparent; color: inherit;
+    border-radius: 7px; width: 30px; height: 30px; font-size: 13px; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .cbBtn:hover { background: var(--hover-btn); }
+  .cbTimer.run { border-color: var(--accent); }
+  .cbTimer.done { animation: cbTimerFlash .6s steps(1) infinite; }
+  @keyframes cbTimerFlash {
+    0%,100% { background:#ff3b30; color:#fff; border-color:#ff3b30; box-shadow:0 0 18px 4px rgba(255,59,48,.85); }
+    50%     { background:var(--input); color:#ff3b30; border-color:#ff3b30; box-shadow:0 2px 10px rgba(0,0,0,.3); }
+  }
+  @media (max-width:520px){
+    #cbTimers { justify-content:center; gap:6px; margin-bottom:10px; }
+    .cbTimer { padding:5px 6px 5px 10px; gap:5px; }
+    .cbTimer .cbTime { font-size:19px; min-width:46px; }
+    .cbBtn { width:28px; height:28px; font-size:12px; }
+    h1 { font-size:1.15rem; letter-spacing:1px; }
+  }
 </style>
 </head>
 <body>
+  <script>try{ if(localStorage.getItem('737theme')==='light')document.body.classList.add('light'); }catch(e){}</script>
+  <div id="cbTimers">
+    <div class="cbTimer" data-dur="30"><span class="cbTime">0:30</span><button class="cbBtn cbPlay" type="button" title="Start / pause">▶</button><button class="cbBtn cbReset" type="button" title="Reset to 0:30">↺</button></div>
+    <div class="cbTimer" data-dur="60"><span class="cbTime">1:00</span><button class="cbBtn cbPlay" type="button" title="Start / pause">▶</button><button class="cbBtn cbReset" type="button" title="Reset to 1:00">↺</button></div>
+  </div>
   <h1>B737NG CIRCUIT BREAKER FINDER</h1>
   <div class="subhead">Search by name, number, panel, or location &mdash; Boeing 737-600/700/800/900</div>
 
@@ -249,6 +299,7 @@
       <option value="">All panels</option>
     </select>
     <button id="clearBtn" type="button">Clear</button>
+    <button id="themeToggle" type="button" title="Switch light / dark theme">🌙 Dark</button>
   </div>
   <div id="countLabel">Loading...</div>
 
@@ -570,6 +621,31 @@ modalContent.addEventListener('wheel', e => {
 }, { passive: false });
 
 filter();
+</script>
+<script>
+(function(){
+  var btn=document.getElementById('themeToggle'); if(!btn)return;
+  function paint(){ var light=document.body.classList.contains('light'); btn.textContent=light?'☀️ Light':'🌙 Dark'; }
+  paint();
+  btn.addEventListener('click',function(){ var light=document.body.classList.toggle('light'); try{ localStorage.setItem('737theme', light?'light':'dark'); }catch(e){} paint(); });
+})();
+(function(){
+  var timers=document.querySelectorAll('.cbTimer'); if(!timers.length)return;
+  function fmt(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  timers.forEach(function(t){
+    var DUR=parseInt(t.getAttribute('data-dur'),10)||30, rem=DUR, iv=null;
+    var timeEl=t.querySelector('.cbTime'), playBtn=t.querySelector('.cbPlay'), resetBtn=t.querySelector('.cbReset');
+    function render(){ timeEl.textContent=fmt(rem); t.classList.toggle('run', iv!==null); t.classList.toggle('done', rem<=0 && iv===null); if(playBtn)playBtn.textContent=(iv!==null)?'⏸':'▶'; }
+    function stop(){ if(iv){ clearInterval(iv); iv=null; } }
+    function tick(){ if(rem>0){ rem--; if(rem<=0)stop(); render(); } }
+    function start(){ if(rem<=0)rem=DUR; if(iv)return; iv=setInterval(tick,1000); render(); }   // start (from full if it had finished); pause keeps the remaining time
+    function toggle(){ if(iv){ stop(); render(); } else start(); }
+    function reset(){ stop(); rem=DUR; render(); }
+    if(playBtn)playBtn.addEventListener('click', toggle);
+    if(resetBtn)resetBtn.addEventListener('click', reset);
+    render();
+  });
+})();
 </script>
 </body>
 </html>
